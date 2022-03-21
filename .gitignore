@@ -1,0 +1,6 @@
+.DS_Store
+*.o
+build
+*.swp
+build/*
+.sconsign.dblite
