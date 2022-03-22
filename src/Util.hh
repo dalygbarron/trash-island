@@ -21,6 +21,12 @@ namespace Util {
         Vec() = default;
 
         /**
+         * Constructor where both dimensions are the same.
+         * @param x is the value to give to all dimensinos.
+         */
+        Vec(int32_t x);
+
+        /**
          * Does as you would expect.
          * @param x is the x component of the vector.
          */

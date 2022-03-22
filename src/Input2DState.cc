@@ -17,7 +17,12 @@ State::Transition Input2DState::onKey(int code) {
     else if (code == KEY_B) m = world.player.move(Util::Vec(-1, 1), world);
     else if (code == KEY_N) m = world.player.move(Util::Vec(1, 1), world);
     else if (code == KEY_D) m = world.player.info(world);
-    if (m != nullptr) world.addMessage(m);
+    else if (code == KEY_PERIOD) m = "You wait a moment";
+    else return Transition();
+    if (m != nullptr) {
+        world.addMessage(m);
+    }
+    world.update();
     return Transition();
 }
 
@@ -31,73 +36,29 @@ void Input2DState::render() {
     for (int x = 0; x < 128; x++) {
         for (int y = 0; y < 32; y++) {
             Util::Vec point(x, y);
+            uint8_t pathing = world.getPath(corner + point);
+            Colour colour{0, pathing, (uint8_t)(pathing * 8), 0xff};
             assets.drawChar(
                 point,
                 world.getTile(corner + point, world.player.getLayer()),
                 GREEN,
-                DARKGREEN
+                colour
             );
         }
     }
-    assets.drawChar(
-        world.player.getPos() - corner,
-        0x01,
-        RED,
-        BLACK
-    );
-    int i = 0;
-    for (auto it = world.messagesBegin(); it != world.messagesEnd(); ++it) {
-        assets.drawMarquee(
-            Util::Vec(0, 37 - i),
-            96,
-            *it,
-            WHITE,
-            Assets::MENU_BG
-        );
-        i++;
+    Util::Vec chunkPos = world.player.getPos() / Chunk::SIZE;
+    for (int x = chunkPos.x - 1; x <= chunkPos.x + 1; x++) {
+        for (int y = chunkPos.y - 1; y <= chunkPos.y + 1; y++) {
+            Chunk const &chunk = world.getChunk(Util::Vec(x, y));
+            std::vector<Dude>::const_iterator it = chunk.dudes.begin();
+            while (it != chunk.dudes.end()) {
+                Dude const &dude = *it;
+                assets.drawChar(dude.getPos() - corner, 0x01, RED, BLANK);
+                it++;
+            }
+        }
     }
-    for (; i < 6; i++) {
-        assets.drawMarquee(
-            Util::Vec(0, 37 - i),
-            96,
-            "",
-            WHITE,
-            Assets::MENU_BG
-        );
-    }
-    assets.drawColumn(
-        Util::Vec(96, 32),
-        6,
-        0xd2,
-        0xba,
-        0xd0,
-        WHITE,
-        Assets::MENU_BG
-    );
-    assets.drawMarquee(
-        Util::Vec(97, 32),
-        31,
-        "\x03""29/39 \x04""40/128 $120",
-        WHITE,
-        Assets::MENU_BG
-    );
-    assets.drawMarquee(
-        Util::Vec(97, 33),
-        31,
-        "10PM 18\xf8""C",
-        WHITE,
-        Assets::MENU_BG
-    );
-    assets.drawText(Util::Vec(97, 34), "Status: ", WHITE, Assets::MENU_BG);
-    assets.drawMarquee(
-        Util::Vec(105, 34),
-        23,
-        "AIDS, Hungry, Pissed, and Gothic",
-        WHITE,
-        Assets::MENU_BG
-    );
-    assets.drawMarquee(Util::Vec(97, 35), 31, "", WHITE, Assets::MENU_BG);
-    assets.drawMarquee(Util::Vec(97, 36), 31, "", WHITE, Assets::MENU_BG);
-    assets.drawMarquee(Util::Vec(97, 37), 31, "", WHITE, Assets::MENU_BG);
+    assets.drawChar(world.player.getPos() - corner, 0x01, BLUE, BLANK);
+    assets.drawGameUI(world);
     assets.drawText(Util::Vec(), "Input", WHITE, Assets::MENU_BG);
 }

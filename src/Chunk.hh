@@ -2,6 +2,7 @@
 #define CHUNK_H
 
 #include <cstdint>
+#include <vector>
 #include "src/Util.hh"
 #include "src/Dude.hh"
 
@@ -11,8 +12,12 @@
  */
 class Chunk {
     public:
-        static constexpr int const LAYERS = 10;
-        static constexpr int const SIZE = 256;
+        static constexpr int const LAYERS = 1;
+        static constexpr int const SIZE = 96;
+
+        uint64_t const seed;
+        Util::Vec const pos;
+        std::vector<Dude> dudes;
 
         /**
          * Constructor to set seed and pos because it makes no sense for these
@@ -21,7 +26,13 @@ class Chunk {
          * @param seed is the random seed.
          * @param pos is the location in multiples of chunk size.
          */
-        Chunk(unsigned int seed, Util::Vec pos);
+        Chunk(uint64_t seed, Util::Vec pos);
+
+        /**
+         * Tells you if the chunk is currently hydrated.
+         * @return true iff it is.
+         */
+        bool hydrated() const;
 
         /**
          * Generates the actual chunk data.
@@ -44,10 +55,7 @@ class Chunk {
         uint8_t getTile(Util::Vec point, uint8_t layer) const;
 
     private:
-        unsigned int const seed;
-        Util::Vec const pos;
         uint8_t *tiles = nullptr;
-        std::vector<Dude> dudes;
 };
 
 #endif

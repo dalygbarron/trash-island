@@ -4,6 +4,11 @@
 
 char Dude::messageBuffer[];
 
+Dude::Dude(Util::Vec pos, uint8_t layer) {
+    this->pos = pos;
+    this->layer = layer;
+}
+
 Util::Vec Dude::getPos() const {
     return pos;
 }
@@ -34,5 +39,9 @@ char const *Dude::info(World const &world) {
 }
 
 char const *Dude::update(World const &world) {
-    return "The dude does nothing because he is lazy.";
+    Util::Vec dir = world.getPathDirection(pos);
+    if (dir.x != 0 || dir.y != 0) {
+        return move(dir, world);
+    }
+    return nullptr;
 }

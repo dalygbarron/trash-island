@@ -15,6 +15,13 @@ class World;
 class Dude {
     public:
         /**
+         * Creates the dude and sets their position.
+         * @param pos is the position to give the dude.
+         * @param layer is the layer to put them at.
+         */
+        Dude(Util::Vec pos, uint8_t layer);
+
+        /**
          * Gives you the dude's position.
          * @return the position.
          */
@@ -55,6 +62,7 @@ class Dude {
 
     private:
         static char messageBuffer[1024];
+        static uint8_t pathBuffer[3][3];
         char const *name = nullptr;
         Util::Vec pos;
         uint8_t layer = 0;
@@ -72,7 +80,7 @@ class Dude {
         Item *rightHand = nullptr;
         Item *legs = nullptr;
         Item *feet = nullptr;
-        std::vector<Item *> inventory;
+        Item *iventory[10];
 };
 
 #endif

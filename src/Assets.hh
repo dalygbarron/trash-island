@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <raylib.h>
 #include "src/Util.hh"
+#include "src/World.hh"
 #include "src/const.hh"
 
 /**
@@ -33,7 +34,7 @@ class Assets {
          * @param fg is the colour of the character.
          * @param bg is the colour to put behind the character.
          */
-        void drawChar(Util::Vec point, uint8_t c, Colour fg, Colour bg);
+        void drawChar(Util::Vec point, uint8_t c, Colour fg, Colour bg) const;
 
         /**
          * Draw the given string of text starting from the given point with no
@@ -43,7 +44,12 @@ class Assets {
          * @param fg is the colour to draw the text characters with.
          * @param bg is the colour to draw behind the text.
          */
-        void drawText(Util::Vec point, char const *text, Colour fg, Colour bg);
+        void drawText(
+            Util::Vec point,
+            char const *text,
+            Colour fg,
+            Colour bg
+        ) const;
 
         /**
          * Draws text and background colour that takes up a specific amount of
@@ -61,7 +67,7 @@ class Assets {
             char const *text,
             Colour fg,
             Colour bg
-        );
+        ) const;
 
         /**
          * Draws a vertical column with a given height.
@@ -81,20 +87,26 @@ class Assets {
             uint8_t endC,
             Colour fg,
             Colour bg
-        );
+        ) const;
 
         /**
          * Fills a rectangle with a colou.
          * @param rect is the rectangle to fill.
          * @param colour is the colour to fill it with.
          */
-        void drawRect(Util::Rect rect, Colour colour);
+        void drawRect(Util::Rect rect, Colour colour) const;
+
+        /**
+         * Draws the whole normal game ui.
+         * @param world is used to get intel about the world.
+         */
+        void drawGameUI(World const &world) const;
 
     private:
         Texture font;
         Util::Vec charSize;
-        Rectangle charSrc;
-        unsigned int clock;
+        mutable Rectangle charSrc;
+        uint64_t clock;
 };
 
 #endif

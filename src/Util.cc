@@ -1,6 +1,11 @@
 #include "src/Util.hh"
 #include <cmath>
 
+Util::Vec::Vec(int32_t x) {
+    this->x = x;
+    this->y = x;
+}
+
 Util::Vec::Vec(int32_t x, int32_t y) {
     this->x = x;
     this->y = y;
@@ -23,11 +28,17 @@ Util::Vec Util::Vec::operator*(int other) const {
 }
 
 Util::Vec Util::Vec::operator/(Vec const &other) const {
-    return Util::Vec(x / other.x, y / other.y);
+    return Util::Vec(
+        (x >= 0) ? x / other.x : (x - other.x + 1) / other.x,
+        (y >= 0) ? y / other.y : (y - other.y + 1) / other.y
+    );
 }
 
 Util::Vec Util::Vec::operator/(int other) const {
-    return Util::Vec(x / other, y / other);
+    return Util::Vec(
+        (x >= 0) ? x / other : (x - other + 1) / other,
+        (y >= 0) ? y / other : (y - other + 1) / other
+    );
 }
 
 Util::Vec &Util::Vec::operator+=(Vec const &other) {
